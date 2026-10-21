@@ -1,5 +1,5 @@
-
 import React, { useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import {
   Search,
   UserRound,
@@ -8,17 +8,18 @@ import {
   X,
   Zap,
   CarFront,
-  Cpu
+  Cpu,
 } from "lucide-react";
 
 export default function Header({
   cartCount,
   onSearch,
   onCartClick,
-  onCategorySelect
+  onCategorySelect,
 }) {
   const [search, setSearch] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
 
   function navigateToCategory(category) {
     onCategorySelect(category);
@@ -28,14 +29,21 @@ export default function Header({
   function submitSearch(event) {
     event.preventDefault();
     onSearch(search);
-    document.getElementById("produtos")?.scrollIntoView({
-      behavior: "smooth"
-    });
     setMenuOpen(false);
   }
 
-  const navLink =
-    "whitespace-nowrap py-2 text-sm font-medium text-slate-600 transition hover:text-blue-700";
+  function goHome() {
+    setSearch("");
+    setMenuOpen(false);
+    onSearch("");
+  }
+
+  const navLink = ({ isActive }) =>
+    `whitespace-nowrap py-2 text-sm font-medium transition ${
+      isActive
+        ? "text-blue-700"
+        : "text-slate-600 hover:text-blue-700"
+    }`;
 
   const iconButton =
     "relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-700 transition hover:bg-slate-100 hover:text-blue-700";
@@ -56,10 +64,7 @@ export default function Header({
         <span className="hidden sm:inline">Compra prática e segura</span>
       </div>
 
-      <header
-        id="inicio"
-        className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur"
-      >
+      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-4 sm:px-6 lg:flex-nowrap lg:gap-6">
           <button
             type="button"
@@ -71,14 +76,11 @@ export default function Header({
             {menuOpen ? <X size={21} /> : <Menu size={21} />}
           </button>
 
-          <a
-            href="#inicio"
+          <Link
+            to="/"
             aria-label="AutoTech Store - início"
             className="flex shrink-0 items-center gap-2"
-            onClick={() => {
-              setMenuOpen(false);
-              onSearch("");
-            }}
+            onClick={goHome}
           >
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-700 text-white shadow-sm">
               <Zap size={23} fill="currentColor" />
@@ -92,7 +94,7 @@ export default function Header({
                 STORE
               </small>
             </span>
-          </a>
+          </Link>
 
           <div className="ml-auto flex shrink-0 items-center gap-1 lg:order-last lg:ml-0">
             <button
@@ -147,35 +149,17 @@ export default function Header({
               menuOpen ? "flex" : "hidden"
             } order-last w-full flex-col gap-1 border-t border-slate-100 pt-3 lg:order-none lg:flex lg:w-auto lg:flex-1 lg:flex-row lg:items-center lg:justify-center lg:gap-4 lg:border-0 lg:pt-0`}
           >
-            <a
-              href="#inicio"
-              className={navLink}
-              onClick={() => {
-                setMenuOpen(false);
-                onSearch("");
-              }}
-            >
+            <NavLink to="/" end className={navLink} onClick={goHome}>
               Início
-            </a>
+            </NavLink>
 
-            <a
-              href="#categorias"
+            <NavLink
+              to="/produtos"
               className={navLink}
               onClick={() => setMenuOpen(false)}
             >
-              Categorias
-            </a>
-
-            <a
-              href="#produtos"
-              className={navLink}
-              onClick={() => {
-                onSearch("");
-                setMenuOpen(false);
-              }}
-            >
               Produtos
-            </a>
+            </NavLink>
 
             <button
               type="button"
@@ -196,8 +180,8 @@ export default function Header({
             </button>
 
             <a
-              href="#sobre"
-              className={navLink}
+              href="/#sobre"
+              className={navLink({ isActive: false })}
               onClick={() => setMenuOpen(false)}
             >
               Sobre a loja
