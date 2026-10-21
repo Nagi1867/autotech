@@ -61,7 +61,12 @@ export default function App() {
 
   return (
     <>
-      <Header cartCount={cartCount} onSearch={searchProducts} onCartClick={() => setCartOpen(true)} />
+      <Header
+        cartCount={cartCount}
+        onSearch={searchProducts}
+        onCartClick={() => setCartOpen(true)}
+        onCategorySelect={selectCategory}
+      />
       <main>
         <Hero />
         <Categories onCategorySelect={selectCategory} />
